@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "llm-prueba"
+version = "0.1.0"
+description = ""
+authors = ["jorge <jorge.nunez@ozonedrive.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.2"
+langchain = "^0.3.0"
+openai = "^1.47.1"
+anthropic = "^0.34.2"
+fastapi = "^0.115.0"
+uvicorn = "^0.30.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
