@@ -17,8 +17,7 @@ This is a FastAPI-based application that allows users to extract technical speci
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/
-   cd 
+   git https://github.com/Switchfleet/LLM_prueba.git
    
 2. Install Poetry (if not already installed)
 
@@ -36,10 +35,13 @@ Method: POST
 Description: Extract vehicle specifications from a given vehicle description.
 
 Request Body:
-
 ```bash
 {
-    "description": "Toyota Corolla 2023 Hybrid, 5-door, automatic transmission, Euro 6, max speed 180 km/h, price 25,000 euros."
+    "description": "Toyota Corolla 2023 Hybrid automatic"
 }
 ```
+
+
+
+
 

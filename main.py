@@ -5,12 +5,16 @@ from pydantic import BaseModel
 # Inicia FastAPI
 app = FastAPI()
 
-# Configura tu clave de API de OpenAI
 openai.api_key = ''
 
 # Modelo Pydantic para validar las solicitudes
 class VehicleRequest(BaseModel):
     description: str  # Descripción del vehículo para extraer las especificaciones
+
+
+@app.get("/")
+async def root():
+    return {"message": "End point raíz"}
 
 # Endpoint para extraer las especificaciones del vehículo
 @app.post("/extract-specifications/")
@@ -50,12 +54,12 @@ async def extract_vehicle_specifications(request: VehicleRequest):
         26. "max_speed" (number): The maximum speed of the vehicle in kilometers per hour (km/h).
         27. "maintenance_costs" (number): The monthly maintenance costs in euros per month (€/month).
         28. "euro_ncap_rating" (integer): The EuroNCAP rating in stars.
-
+        
         Return the result in JSON format. If a value is not available, set it to `null`.
 
         Here is the description of the vehicle: {request.description}
         """
-
+        
         # Llamada a la API de OpenAI
         response = openai.ChatCompletion.create(
             model="gpt-4",
@@ -63,8 +67,8 @@ async def extract_vehicle_specifications(request: VehicleRequest):
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=1000,  # Limita los tokens para evitar respuestas largas
-            temperature=0  # Baja temperatura para respuestas más precisas
+            max_tokens=1000,
+            temperature=0
         )
 
         # Extraer el contenido del mensaje generado por la IA
