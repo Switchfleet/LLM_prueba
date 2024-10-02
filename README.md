@@ -1,4 +1,4 @@
-# Vehicle Specifications Extractor API
+# LLM POC
 
 This is a FastAPI-based application that allows users to extract technical specifications for vehicles using the OpenAI GPT-4 API. Given a vehicle description, the API will return the relevant specifications in JSON format.
 
