@@ -1,11 +1,21 @@
 from fastapi import FastAPI, HTTPException
-import openai
+from openai import OpenAI
 from pydantic import BaseModel
+from dotenv import load_dotenv
+import os
+import logging
+import json
+
+
+logging.basicConfig(level=logging.INFO)
 
 # Inicia FastAPI
 app = FastAPI()
 
-openai.api_key = ''
+load_dotenv()
+api_key = os.getenv('API_KEY')
+client = OpenAI(api_key=api_key)
+
 
 # Modelo Pydantic para validar las solicitudes
 class VehicleRequest(BaseModel):
@@ -56,25 +66,39 @@ async def extract_vehicle_specifications(request: VehicleRequest):
         28. "euro_ncap_rating" (integer): The EuroNCAP rating in stars.
         
         Return the result in JSON format. If a value is not available, set it to `null`.
-
-        Here is the description of the vehicle: {request.description}
-        """
         
+        I want you to look for car information on manufacturers' websites and specialized car websites, such as "coches.net". Also add a field indicating from where you have extracted the information.
+        
+        Here is the description of the vehicle: {request.description}
+        
+        SHOW ONLY THE JSON.
+        """
+
         # Llamada a la API de OpenAI
-        response = openai.ChatCompletion.create(
-            model="gpt-4",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=1000,
-            temperature=0
-        )
+        response = client.chat.completions.create(model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=1000,
+        temperature=0.3)
 
-        # Extraer el contenido del mensaje generado por la IA
-        vehicle_data = response['choices'][0]['message']['content']
+        vehicle_data = response.choices[0].message.content
 
-        return {"specifications": vehicle_data}
+        # Imprimir el contenido JSON en consola
+        print(vehicle_data)  # Aquí se imprime el JSON recibido
+
+        return {"message": "JSON printed in console!"}
+
+
+    except json.JSONDecodeError as jde:
+
+        print(f"Error al decodificar JSON: {str(jde)}")
+
+        raise HTTPException(status_code=500, detail="Error al decodificar la respuesta de OpenAI en JSON.")
 
     except Exception as e:
+
+        print(f"Error: {str(e)}")
+
         raise HTTPException(status_code=500, detail=str(e))
