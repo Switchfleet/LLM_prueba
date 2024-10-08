@@ -12,6 +12,7 @@ This is a FastAPI-based application that allows users to extract technical speci
 
 - Python 3.12.2
 - OpenAI API Key
+- Antrophic API Key
 
 ## Installation
 
@@ -23,11 +24,16 @@ This is a FastAPI-based application that allows users to extract technical speci
 
 3. Install dependencies using Poetry:
    ```bash
-   poetry install
+   poetry install --no-root
  
 ## Running the API
+
 ```bash
-   poetry run uvicorn main:app --reload
+   poetry shell
+   ```
+
+```bash
+   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
    ```
 ## Usage
 Method: POST
@@ -40,6 +46,8 @@ Request Body:
     "description": "Toyota Corolla 2023 Hybrid automatic"
 }
 ```
+
+You can use it from the docs url http://127.0.0.1:8000/docs. The method name is extract-specifications.
 
 
 
