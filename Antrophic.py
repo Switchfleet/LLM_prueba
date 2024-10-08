@@ -1,11 +1,12 @@
 from fastapi import FastAPI, HTTPException
-from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel
 from dotenv import load_dotenv
 import os
 import logging
 import json
+
 
 # Configurar el nivel de logging
 logging.basicConfig(level=logging.INFO)
@@ -15,10 +16,10 @@ app = FastAPI()
 
 # Cargar variables de entorno (como la API key)
 load_dotenv()
-api_key = os.getenv('API_KEY')
+api_key = os.getenv('ANTHROPIC_API_KEY')
 
-# Configuración del modelo OpenAI a través de LangChain
-llm = ChatOpenAI(openai_api_key=api_key, model="gpt-4o-mini", temperature=0.2)
+# Configuración del modelo Anthropic a través de LangChain
+llm = ChatAnthropic(anthropic_api_key=api_key, model="claude-3-sonnet-20240229", temperature=0.2)
 
 # Esquema JSON para estructurar la salida
 # Esquema JSON para estructurar la salida
@@ -210,6 +211,7 @@ vehicle_json_schema = {
 
 
 
+
 # Crear un LLM con salida estructurada
 structured_llm = llm.with_structured_output(vehicle_json_schema)
 
@@ -222,30 +224,25 @@ class VehicleRequest(BaseModel):
 async def root():
     return {"message": "End point raíz"}
 
-def calcular_coste(num_tokens):
-    coste_por_token = 0.03 / 1000  #Precio Aproximado
-    return num_tokens * coste_por_token
-
-
 # Endpoint para extraer las especificaciones del vehículo
 @app.post("/extract-specifications/")
 async def extract_vehicle_specifications(request: VehicleRequest):
     try:
         # Prompt template para LangChain
         prompt = f"""
-            You are an assistant that extracts technical specifications for vehicles based on the following schema. 
-            Your response **MUST** be in valid JSON format, and it **MUST** match the provided schema exactly, without adding any additional fields or nesting.
-            Do not include any additional properties or explanations.
+                    You are an assistant that extracts technical specifications for vehicles based on the following schema. 
+                    Your response **MUST** be in valid JSON format, and it **MUST** match the provided schema exactly, without adding any additional fields or nesting.
+                    Do not include any additional properties or explanations.
 
-            Schema:
-            {json.dumps(vehicle_json_schema, indent=2)}
+                    Schema:
+                    {json.dumps(vehicle_json_schema, indent=2)}
 
-            Extract the specifications from the following description:
-            {request.description}
-            
-            You must look for all the data missing in the description in websites. If you can´t find a field set it to null.
-            Return **ONLY** the JSON data, strictly following the schema above.
-            """
+                    Extract the specifications from the following description:
+                    {request.description}
+
+                    You must look for all the data missing in the description in websites. If you can´t find a field set it to null.
+                    Return **ONLY** the JSON data, strictly following the schema above.
+                    """
 
         # Invocar el modelo con el prompt y obtener el JSON estructurado
         vehicle_data = structured_llm.invoke(prompt)
@@ -253,14 +250,9 @@ async def extract_vehicle_specifications(request: VehicleRequest):
         # Imprimir el contenido JSON en consola
         print(vehicle_data)
 
-        num_tokens = llm.get_num_tokens(prompt)
-        logging.info(f"Número de tokens utilizados: {num_tokens}")
 
-        # Calcular el coste estimado
-        coste = calcular_coste(num_tokens=num_tokens)
-        logging.info(f"Coste estimado: {coste} USD")
 
-        return {"vehicle_data": vehicle_data, "coste_estimado_usd": coste}
+        return {"vehicle_data": vehicle_data}
 
     except Exception as e:
         logging.error(f"Error inesperado: {str(e)}")

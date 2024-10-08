@@ -19,6 +19,7 @@ langchain-chroma = "^0.1.4"
 beautifulsoup4 = "^4.12.3"
 nest-asyncio = "^1.6.0"
 python-dotenv = "^1.0.1"
+langchain-anthropic = "^0.2.3"
 
 
 [build-system]
