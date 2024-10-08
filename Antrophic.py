@@ -90,11 +90,11 @@ vehicle_json_schema = {
             "type": "string",
             "description": "The technology of the vehicle.",
             "enum": [
-                "HEV",   # Vehículo híbrido eléctrico
-                "MHEV",  # Vehículo híbrido eléctrico suave
-                "PHEV",  # Vehículo híbrido enchufable
-                "EV",    # Vehículo eléctrico
-                "EREV",  # Vehículo eléctrico con extensor de rango
+                "HEV",
+                "MHEV",
+                "PHEV",
+                "EV",
+                "EREV",
                 "Combustion"
             ]
         },
@@ -112,13 +112,13 @@ vehicle_json_schema = {
             "type": "string",
             "description": "The type of fuel the vehicle uses.",
             "enum": [
-                "gasoleo",         # Diésel
-                "gasolina",        # Gasolina
-                "electricidad",    # Eléctrico
-                "etanol",          # Etanol
-                "gas natural",     # GNC
-                "glp",             # Gas licuado de petróleo (GLP)
-                "hidrogeno"        # Hidrógeno
+                "gasoleo",
+                "gasolina",
+                "electricidad",
+                "etanol",
+                "gas natural",
+                "glp",
+                "hidrogeno"
             ]
         },
         "electric_range": {
