@@ -25,6 +25,8 @@ This is a FastAPI-based application that allows users to extract technical speci
 3. Install dependencies using Poetry:
    ```bash
    poetry install --no-root
+      ```
+4. Create a file called .env with the variables OPENAI_API_KEY and ANTHROPIC_API_KEY.
  
 ## Running the API
 
