@@ -22,7 +22,7 @@ openai_api_key = os.getenv('OPENAI_API_KEY')
 anthropic_api_key = os.getenv('ANTHROPIC_API_KEY')
 
 # Configuración del modelo OpenAI a través de LangChain
-llm_openai = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4o-mini", temperature=0.2)
+llm_openai = ChatOpenAI(openai_api_key=openai_api_key, model="gpt-4o-mini", temperature=0.1)
 
 # Configuración del modelo Anthropic a través de LangChain
 llm_anthropic = ChatAnthropic(anthropic_api_key=anthropic_api_key, model="claude-3-sonnet-20240229", temperature=0.2)
